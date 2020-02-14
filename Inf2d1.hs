@@ -51,7 +51,7 @@ type Branch = [Node]
 type Graph= [Node]
 
 numNodes::Int
-numNodes = 4
+numNodes = 5
 
 graph::Graph
 graph=[0,1,2,0,0,0,0,1,0,0,0,0,0,0,0,0]
