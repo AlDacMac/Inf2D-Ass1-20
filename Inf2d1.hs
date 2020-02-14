@@ -93,7 +93,15 @@ breadthFirstSearch g destination next branches exploredList =
 -- The depthLimitedSearch function is similiar to the depthFirstSearch function,
 -- except its search is limited to a pre-determined depth, d, in the search tree.
 depthLimitedSearch::Graph ->Node->(Branch ->Graph-> [Branch])->[Branch]-> Int->[Node]-> Maybe Branch
-depthLimitedSearch g destination next branches  d exploredList = undefined
+depthLimitedSearch g destination next branches d exploredList = 
+    if (or (map (\x -> (head (head branches)) == x) exploredList)) || length (head branches) > d 
+        then if (tail branches) == []
+            then Nothing
+            else (depthLimitedSearch g destination next (tail branches) d exploredList)
+        else if ((head (head branches)) == destination)
+            then Just (head branches)
+            else depthLimitedSearch g destination (next) ((next (head branches) graph) ++ tail branches) d ((head (head branches):exploredList))
+  
 
 
 
