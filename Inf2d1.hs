@@ -63,15 +63,11 @@ graph=[0,1,2,0,0,0,0,1,0,0,0,0,0,0,0,0]
 -- Your function should return an empty list if the input search branch is empty.
 -- This implementation of next function does not backtrace branches.
 next::Branch -> Graph ->  [Branch]
-next branch g = undefined
-       
-
-
+next branch g = [y:branch | y <- [0..numNodes-1], g!!((head(branch) * numNodes) + y) > 0]
 
 -- |The checkArrival function should return true if the current location of the robot is the destination, and false otherwise.
 checkArrival::Node -> Node -> Bool
-checkArrival destination curNode = undefined
-
+checkArrival destination curNode = destination == curnode
 
 explored::Node-> [Node] ->Bool
 explored point exploredList = undefined
