@@ -67,7 +67,7 @@ next branch g = [y:branch | y <- [0..numNodes-1], g!!((head(branch) * numNodes) 
 
 -- |The checkArrival function should return true if the current location of the robot is the destination, and false otherwise.
 checkArrival::Node -> Node -> Bool
-checkArrival destination curNode = destination == curnode
+checkArrival destination curNode = destination == curNode
 
 explored::Node-> [Node] ->Bool
 explored point exploredList = undefined
