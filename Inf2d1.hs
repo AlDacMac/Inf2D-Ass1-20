@@ -80,7 +80,7 @@ explored point exploredList = undefined
 
 breadthFirstSearch::Graph -> Node->(Branch ->Graph -> [Branch])->[Branch]->[Node]->Maybe Branch
 breadthFirstSearch g destination next branches exploredList = 
-    if (or (map (\x -> (head (head branches)) == x) exploredList))
+    if (head (head branches)) `elem` exploredList
         then if (tail branches) == []
             then Nothing
             else (breadthFirstSearch g destination next (tail branches) exploredList)
@@ -94,7 +94,7 @@ breadthFirstSearch g destination next branches exploredList =
 -- except its search is limited to a pre-determined depth, d, in the search tree.
 depthLimitedSearch::Graph ->Node->(Branch ->Graph-> [Branch])->[Branch]-> Int->[Node]-> Maybe Branch
 depthLimitedSearch g destination next branches d exploredList = 
-    if (or (map (\x -> (head (head branches)) == x) exploredList)) || length (head branches) > d 
+    if (head (head branches)) `elem` exploredList || length (head branches) > d 
         then if (tail branches) == []
             then Nothing
             else (depthLimitedSearch g destination next (tail branches) d exploredList)
