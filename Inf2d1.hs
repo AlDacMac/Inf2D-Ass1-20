@@ -79,11 +79,11 @@ explored point exploredList = undefined
 -- The function should search nodes using a breadth first search order.
 
 breadthFirstSearch::Graph -> Node->(Branch ->Graph -> [Branch])->[Branch]->[Node]->Maybe Branch
+breadthFirstSearch [] destination next branches exploredList = Nothing
+breadthFirstSearch g destination next [] exploredList = Nothing
 breadthFirstSearch g destination next branches exploredList = 
     if (head (head branches)) `elem` exploredList
-        then if (tail branches) == []
-            then Nothing
-            else (breadthFirstSearch g destination next (tail branches) exploredList)
+        then (breadthFirstSearch g destination next (tail branches) exploredList)
         else if ((head (head branches)) == destination)
             then Just (head branches)
             else breadthFirstSearch g destination (next) (tail branches ++ (next (head branches) graph)) ((head (head branches):exploredList))
