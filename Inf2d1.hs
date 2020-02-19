@@ -8,8 +8,7 @@ module Inf2d1 where
 import Data.List (sortBy, elemIndices, elemIndex)
 import ConnectFourWithTwist
 
-
-
+import Data.List (delete)
 
 {- NOTES:
 
@@ -136,7 +135,14 @@ estimateMinPath g cost heuristic hrTable branch1 branch2 =
         else branch2
 
 aStarSearch::Graph->Node->(Branch->Graph -> [Branch])->([Int]->Node->Int)->[Int]->(Graph->Branch->Int)->[Branch]-> [Node]-> Maybe Branch
-aStarSearch g destination next getHr hrTable cost branches exploredList =undefined
+aStarSearch g destination next getHr hrTable cost [] exploredList = Nothing
+aStarSearch [] destination next getHr hrTable cost branches exploredList = Nothing
+aStarSearch g destination next getHr hrTable cost branches exploredList = 
+    if head(foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) `elem` exploredList
+        then aStarSearch g destination next getHr hrTable cost (delete (foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) branches) exploredList
+        else if head(foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) == destination
+            then Just (foldl1 (estimateMinPath graph cost getHr heuristicTable) branches)
+            else aStarSearch g destination next getHr hrTable cost (branches ++ next (foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) graph) (head(foldl1 (estimateMinPath graph cost getHr heuristicTable) branches): exploredList)
 
 -- | Section 5: Games
 -- See ConnectFourWithTwist.hs for more detail on  functions that might be helpful for your implementation. 
