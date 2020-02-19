@@ -154,8 +154,17 @@ aStarSearch g destination next getHr hrTable cost branches exploredList =
  
 
 -- The function determines the score of a terminal state, assigning it a value of +1, -1 or 0:
+-- The human player, with role value 1, is max
 eval :: Game -> Int
-eval game = undefined
+eval game = 
+    if checkWin game 1
+        then 1
+        else if checkWin game 0
+            then (-1)
+            else 0
+                    
+                
+                    
 
 -- | The alphabeta function should return the minimax value using alphabeta pruning.
 -- The eval function should be used to get the value of a terminal state. 
