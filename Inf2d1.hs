@@ -129,6 +129,12 @@ getHr hrTable node = hrTable!!node
 ---- and a combination of the cost and heuristic functions to determine the order in which nodes are searched.
 ---- Nodes with a lower heuristic value should be searched before nodes with a higher heuristic value.
 
+estimateMinPath:: Graph -> (Graph -> Branch -> Int) -> ([Int]->Node->Int) -> [Int] -> Branch -> Branch -> Branch
+estimateMinPath g cost heuristic hrTable branch1 branch2 = 
+    if ((heuristic hrTable (head branch1)) + (cost g branch1)) <= ((heuristic hrTable (head branch2)) + (cost g branch2))
+        then branch1
+        else branch2
+
 aStarSearch::Graph->Node->(Branch->Graph -> [Branch])->([Int]->Node->Int)->[Int]->(Graph->Branch->Int)->[Branch]-> [Node]-> Maybe Branch
 aStarSearch g destination next getHr hrTable cost branches exploredList =undefined
 
