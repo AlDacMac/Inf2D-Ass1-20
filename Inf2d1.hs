@@ -112,15 +112,16 @@ depthLimitedSearch g destination next branches d exploredList =
 
 -- | The cost function calculates the current cost of a trace. The cost for a single transition is given in the adjacency matrix.
 -- The cost of a whole trace is the sum of all relevant transition costs.
-cost :: Graph ->Branch  -> Int
-cost gr branch = undefined
+cost :: Graph -> Branch -> Int
+cost gr [node] = 0
+cost gr (node:branch) = graph!!((node * numNodes) + head(branch)) + cost gr branch
 
 
     
 -- | The getHr function reads the heuristic for a node from a given heuristic table.
 -- The heuristic table gives the heuristic (in this case straight line distance) and has one entry per node. It is ordered by node (e.g. the heuristic for node 0 can be found at index 0 ..)  
 getHr:: [Int]->Node->Int
-getHr hrTable node = undefined  
+getHr hrTable node = hrTable!!node
 
 
 -- | A* Search
