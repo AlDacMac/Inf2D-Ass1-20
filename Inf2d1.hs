@@ -106,6 +106,7 @@ depthLimitedSearch g destination next branches d exploredList =
   
 
 {-depthLimitedSearch2::Graph ->Node->(Branch ->Graph-> [Branch])->[Branch]-> Int->[Node]-> Maybe Branch
+depthLimitedSearch2 g destination next [] d exploredList = Nothing
 depthLimitedSearch2 g destination next branches d exploredList =
     if (head (head branches)) `elem` exploredList || length (head branches) > d
         then depthLimitedSearch g destination next (tail branches) d exploredList
