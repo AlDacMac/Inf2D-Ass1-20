@@ -120,9 +120,14 @@ depthLimitedSearch2 g destination next branches d exploredList =
 
 -- | The cost function calculates the current cost of a trace. The cost for a single transition is given in the adjacency matrix.
 -- The cost of a whole trace is the sum of all relevant transition costs.
+-- If no path is available, then half of maxBound is returned (full maxBound would potentially cause overflow issues)
 cost :: Graph -> Branch -> Int
 cost gr [node] = 0
-cost gr (node:branch) = gr!!((node * numNodes) + head(branch)) + cost gr branch
+cost gr (node:branch) = 
+    if gr!!((node * numNodes) + head(branch)) > 0
+        then 
+            gr!!((node * numNodes) + head(branch)) + cost gr branch
+        else (maxBound::Int) `div` 2
 
 
     
