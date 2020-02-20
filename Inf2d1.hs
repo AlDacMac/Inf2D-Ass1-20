@@ -105,7 +105,12 @@ depthLimitedSearch g destination next branches d exploredList =
             else depthLimitedSearch g destination (next) ((next (head branches) g) ++ tail branches) d ((head (head branches):exploredList))
   
 
-
+{-depthLimitedSearch2::Graph ->Node->(Branch ->Graph-> [Branch])->[Branch]-> Int->[Node]-> Maybe Branch
+depthLimitedSearch2 g destination next branches d exploredList =
+    if (head (head branches)) `elem` exploredList || length (head branches) > d
+        then depthLimitedSearch g destination next (tail branches) d exploredList
+        else if 
+-}
 
 -- | Section 4: Informed search
 
@@ -173,14 +178,14 @@ eval game =
 --  The eval function should be used to get the value of a terminal state. 
 alphabeta:: Role -> Game -> Int
 alphabeta player game = 1
+    if player == maxPlayer
+        then maxValue (movesAndTurns game maxPlayer) (-2) 2 (-2)
 
 -- v is given as an input here, as we can't do loops
 maxValue:: [Game] -> Int -> Int -> Int -> Int
 maxValue [] alpha beta v = v
 maxValue (game:games) alpha beta v = 
     if terminal game
-        then eval game
-        else let newV = (max v  (minValue (movesAndTurns game compPlayer) alpha beta 2)) in
             if newV >= beta 
                 then newV
                 else maxValue games alpha beta (max v newV)
@@ -192,6 +197,8 @@ minValue (game:games) alpha beta v =
     if terminal game
         then eval game
         else let newV = (min v (maxValue (movesAndTurns game compPlayer) alpha beta (-2))) in
+        then let newV = (min v (eval game)) in
+            if newV <= alpha
             if newV <= alpha
                 then newV
                 else minValue games alpha beta (min v newV)
