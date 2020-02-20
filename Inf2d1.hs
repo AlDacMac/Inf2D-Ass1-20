@@ -50,10 +50,13 @@ type Branch = [Node]
 type Graph= [Node]
 
 numNodes::Int
-numNodes = 5
+numNodes = 4
 
-graph::Graph
-graph=[0,1,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1]
+testGraph::Graph
+testGraph=[0,1,2,0,0,0,0,1,0,0,0,0,0,0,0,0]
+
+testHeuristicTable::[Int]
+testHeuristicTable=[30,9,4,0]
 
 -- 
 
@@ -85,7 +88,7 @@ breadthFirstSearch g destination next branches exploredList =
         then (breadthFirstSearch g destination next (tail branches) exploredList)
         else if ((head (head branches)) == destination)
             then Just (head branches)
-            else breadthFirstSearch g destination (next) (tail branches ++ (next (head branches) graph)) ((head (head branches):exploredList))
+            else breadthFirstSearch g destination (next) (tail branches ++ (next (head branches) g)) ((head (head branches):exploredList))
    
 
 -- | Depth-Limited Search
@@ -99,7 +102,7 @@ depthLimitedSearch g destination next branches d exploredList =
             else (depthLimitedSearch g destination next (tail branches) d exploredList)
         else if ((head (head branches)) == destination)
             then Just (head branches)
-            else depthLimitedSearch g destination (next) ((next (head branches) graph) ++ tail branches) d ((head (head branches):exploredList))
+            else depthLimitedSearch g destination (next) ((next (head branches) g) ++ tail branches) d ((head (head branches):exploredList))
   
 
 
@@ -113,7 +116,7 @@ depthLimitedSearch g destination next branches d exploredList =
 -- The cost of a whole trace is the sum of all relevant transition costs.
 cost :: Graph -> Branch -> Int
 cost gr [node] = 0
-cost gr (node:branch) = graph!!((node * numNodes) + head(branch)) + cost gr branch
+cost gr (node:branch) = gr!!((node * numNodes) + head(branch)) + cost gr branch
 
 
     
@@ -138,11 +141,11 @@ aStarSearch::Graph->Node->(Branch->Graph -> [Branch])->([Int]->Node->Int)->[Int]
 aStarSearch g destination next getHr hrTable cost [] exploredList = Nothing
 aStarSearch [] destination next getHr hrTable cost branches exploredList = Nothing
 aStarSearch g destination next getHr hrTable cost branches exploredList = 
-    if head(foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) `elem` exploredList
-        then aStarSearch g destination next getHr hrTable cost (delete (foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) branches) exploredList
-        else if head(foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) == destination
-            then Just (foldl1 (estimateMinPath graph cost getHr heuristicTable) branches)
-            else aStarSearch g destination next getHr hrTable cost (branches ++ next (foldl1 (estimateMinPath graph cost getHr heuristicTable) branches) graph) (head(foldl1 (estimateMinPath graph cost getHr heuristicTable) branches): exploredList)
+    if head(foldl1 (estimateMinPath g cost getHr hrTable) branches) `elem` exploredList
+        then aStarSearch g destination next getHr hrTable cost (delete (foldl1 (estimateMinPath g cost getHr hrTable) branches) branches) exploredList
+        else if head(foldl1 (estimateMinPath g cost getHr hrTable) branches) == destination
+            then Just (foldl1 (estimateMinPath g cost getHr hrTable) branches)
+            else aStarSearch g destination next getHr hrTable cost (branches ++ next (foldl1 (estimateMinPath g cost getHr hrTable) branches) g) (head(foldl1 (estimateMinPath g cost getHr hrTable) branches): exploredList)
 
 -- | Section 5: Games
 -- See ConnectFourWithTwist.hs for more detail on  functions that might be helpful for your implementation. 
