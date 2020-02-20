@@ -177,31 +177,38 @@ eval game =
 -- | The alphabeta function should return the minimax value using alphabeta pruning.
 --  The eval function should be used to get the value of a terminal state. 
 alphabeta:: Role -> Game -> Int
-alphabeta player game = 1
+alphabeta player game = 
     if player == maxPlayer
         then maxValue (movesAndTurns game maxPlayer) (-2) 2 (-2)
+        else minValue (movesAndTurns game minPlayer) (-2) 2 2 
 
 -- v is given as an input here, as we can't do loops
 maxValue:: [Game] -> Int -> Int -> Int -> Int
 maxValue [] alpha beta v = v
 maxValue (game:games) alpha beta v = 
     if terminal game
+        then let newV = (max v (eval game)) in
             if newV >= beta 
                 then newV
-                else maxValue games alpha beta (max v newV)
+                else maxValue games (max alpha newV) beta newV
+        else let newV = (max v (minValue (movesAndTurns game minPlayer) alpha beta 2)) in
+            if newV >= beta 
+                then newV
+                else maxValue games (max alpha newV) beta newV
 
 
 minValue:: [Game] -> Int -> Int -> Int -> Int
 minValue [] alpha beta v = v
 minValue (game:games) alpha beta v = 
     if terminal game
-        then eval game
-        else let newV = (min v (maxValue (movesAndTurns game compPlayer) alpha beta (-2))) in
         then let newV = (min v (eval game)) in
             if newV <= alpha
+                then newV
+                else minValue games alpha (min beta newV) newV
+        else let newV = (min v (maxValue (movesAndTurns game maxPlayer) alpha beta (-2))) in
             if newV <= alpha
                 then newV
-                else minValue games alpha beta (min v newV)
+                else minValue games alpha (min beta newV) newV
 
 -- | OPTIONAL!
 -- You can try implementing this as a test for yourself or if you find alphabeta pruning too hard.
